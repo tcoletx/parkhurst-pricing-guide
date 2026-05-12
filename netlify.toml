@@ -1,0 +1,81 @@
+# ═══════════════════════════════════════════════════════
+# PARKHURST NUVISION — NETLIFY CONFIGURATION
+# netlify.toml
+# ═══════════════════════════════════════════════════════
+
+# ─── BUILD SETTINGS ────────────────────────────────────
+# This is a static site — no build step required.
+# Netlify will serve the root directory directly.
+
+[build]
+  publish = "."         # Serve from root (index.html lives here)
+  command = ""          # No build command needed for static HTML
+
+# ─── ENVIRONMENT ───────────────────────────────────────
+[build.environment]
+  NODE_VERSION = "20"   # Only needed if you add build tools later
+
+# ─── REDIRECTS ─────────────────────────────────────────
+# Redirect old or alternate URLs to canonical page
+
+[[redirects]]
+  from   = "/pricing"
+  to     = "/"
+  status = 301
+
+[[redirects]]
+  from   = "/pricing-guide"
+  to     = "/"
+  status = 301
+
+[[redirects]]
+  from   = "/guide"
+  to     = "/"
+  status = 301
+
+# 404 handler — redirect to home
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 404
+
+# ─── SECURITY HEADERS ──────────────────────────────────
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options       = "DENY"
+    X-XSS-Protection      = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy       = "strict-origin-when-cross-origin"
+    Permissions-Policy    = "camera=(), microphone=(), geolocation=()"
+    # Uncomment and configure CSP after confirming all external domains:
+    # Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self';"
+
+# ─── ASSET CACHING ─────────────────────────────────────
+# Cache CSS/JS with a long TTL (use hashed filenames in production for cache busting)
+
+[[headers]]
+  for = "*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.svg"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+# ─── NETLIFY FORMS ─────────────────────────────────────
+# Netlify automatically detects the form with data-netlify="true"
+# in index.html. No additional config needed.
+#
+# To receive email notifications:
+# 1. Go to Netlify Dashboard → Forms → pricing-guide
+# 2. Add notification email under "Form notifications"
+# 3. Optionally connect Zapier / Make for CRM push
+#
+# Form name used: "pricing-guide" (matches name attr in HTML)
